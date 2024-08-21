@@ -26,6 +26,5 @@ class LoginView(APIView):
 
 class LogoutView(APIView):
     def post(self, request):
-        # Cerrar sesión para el usuario autenticado
         logout(request)
         return Response({'msg': 'Successfully Logged out'}, status=status.HTTP_200_OK)

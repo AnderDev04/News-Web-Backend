@@ -3,6 +3,7 @@ from .models import News, Category
 from .serializers import NewsSerializer, CategorySerializer
 from rest_framework.response import Response
 from rest_framework import status
+from .permissions import IsAdminOrReadOnly
 
 class NewsListView(APIView):
     def get(self, request):
@@ -26,6 +27,8 @@ class NewsListViewFull(APIView):
     
     
 class NewsDetailView(APIView):
+    permission_classes = [IsAdminOrReadOnly] 
+
     def get(self, request, pk):
         news = News.objects.get(id=pk)
         serializer = NewsSerializer(news)
@@ -39,13 +42,10 @@ class NewsDetailView(APIView):
         
         serializer = NewsSerializer(news, data=request.data, partial=True)
         
-        # Validar los datos
         if serializer.is_valid():
-            # Guardar los datos validados
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         
-        # Si los datos no son válidos, devolver los errores
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
     def delete(self, request, pk):
