@@ -10,7 +10,6 @@ class NewsListView(APIView):
         serializer = NewsSerializer(news, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
         
-        
     def post(self, request):
         serializer = NewsSerializer(data=request.data)
         if serializer.is_valid():
