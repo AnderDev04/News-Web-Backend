@@ -6,7 +6,7 @@ from rest_framework import status
 
 class NewsListView(APIView):
     def get(self, request):
-        news = News.objects.all()
+        news = News.objects.filter(is_deleted=False)
         serializer = NewsSerializer(news, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
         
@@ -34,13 +34,15 @@ class NewsDetailView(APIView):
     
     def delete(self, request, pk):
         news = News.objects.get(id=pk)
-        news.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-    
-    def delete_logica(self, request, pk):
-        news = News.objects.get(id=pk)
-        news.is_active = False
+        news.is_deleted = True
         news.save()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+ 
+    
+class DeleteNewsAPI(APIView):
+    def delete(self, request, pk):
+        news = News.objects.get(id=pk)
+        news.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
     
     
@@ -74,12 +76,15 @@ class CategoryDetailView(APIView):
     
     def delete(self, request, pk):
         category = Category.objects.get(id=pk)
-        category.delete()
+        category.is_deleted = False
+        category.save()
         return Response(status=status.HTTP_204_NO_CONTENT)
     
-    def delete_logica(self, request, pk):
-        category = Category.objects.get(id=pk)
-        category.is_active = False
-        category.save()
+
+
+class DeleteCategoryAPI(APIView):
+    def delete(self, request, pk):
+        news = News.objects.get(id=pk)
+        news.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
     

@@ -25,6 +25,7 @@ INSTALLED_APPS = [
     'drf_yasg',
     # Registro de nuestras apps
     "news",
+    'users',
     'rest_framework',
 ]
 
